@@ -366,7 +366,7 @@ int32_t bmp180_read_raw_pressure(void *_bmp, uint8_t oss) {
 
 
 /*
- * Returns the measured temperature of this sensor.
+ * Returns the measured temperature in celsius.
  * 
  */
 float bmp180_temperature(void *_bmp) {
@@ -387,7 +387,7 @@ float bmp180_temperature(void *_bmp) {
 
 
 /*
- * Returns the measured pressure of this sensor.
+ * Returns the measured pressure in pascal.
  * 
  */
 long bmp180_pressure(void *_bmp) {
@@ -433,7 +433,7 @@ long bmp180_pressure(void *_bmp) {
 
 
 /*
- * Returns the altitude based on the measured pressure 
+ * Returns altitude in meters based on the measured pressure 
  * and temperature of this sensor.
  * 
  */
