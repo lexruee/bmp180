@@ -91,7 +91,7 @@
  *
  */
 
-#define __BMP180_DEBUG__
+//#define __BMP180_DEBUG__
 #ifdef __BMP180_DEBUG__				
 #define DEBUG(...)	printf(__VA_ARGS__)
 #else
