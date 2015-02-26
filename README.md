@@ -5,7 +5,7 @@ A driver written in C for the sensor BMP180.
 ## Example Usage
 
 ```c
-include "bmp180.h"
+#include "bmp180.h"
 #include <unistd.h>
 #include <stdio.h>
 
