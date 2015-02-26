@@ -10,7 +10,7 @@ int main(int argc, char **argv){
 	bmp180_set_oss(bmp, 1);
 	
 	if(bmp != NULL){
-		int i = 0;
+		int i;
 		for(i = 0; i < 10; i++) {
 			float t = bmp180_temperature(bmp);
 			long p = bmp180_pressure(bmp);
