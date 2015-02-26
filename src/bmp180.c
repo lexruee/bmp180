@@ -334,10 +334,6 @@ int32_t bmp180_read_raw_pressure(void *_bmp, uint8_t oss) {
 	uint8_t cmd;
 	
 	switch(oss) {
-		case BMP180_PRE_OSS0:
-			wait = BMP180_PRE_OSS0_WAIT_US; cmd = BMP180_PRE_OSS0_CMD;
-			break;
-		
 		case BMP180_PRE_OSS1:
 			wait = BMP180_PRE_OSS1_WAIT_US; cmd = BMP180_PRE_OSS1_CMD;
 			break;
@@ -349,6 +345,12 @@ int32_t bmp180_read_raw_pressure(void *_bmp, uint8_t oss) {
 		case BMP180_PRE_OSS3:
 			wait = BMP180_PRE_OSS3_WAIT_US; cmd = BMP180_PRE_OSS3_CMD;
 			break;
+		
+		case BMP180_PRE_OSS0:
+		default:
+			wait = BMP180_PRE_OSS0_WAIT_US; cmd = BMP180_PRE_OSS0_CMD;
+			break;
+		
 	}
 	
 	i2c_smbus_write_byte_data(bmp->file, BMP180_CTRL, cmd);
