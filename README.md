@@ -33,3 +33,7 @@ int main(int argc, char **argv){
 
 ```
 
+## Dependencies
+
+* i2c-tools 
+* libi2c-dev
