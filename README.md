@@ -16,7 +16,7 @@ int main(int argc, char **argv){
 	void *bmp = bmp180_init(address, i2c_device);
 	
 	if(bmp != NULL){
-		int i = 0;
+		int i;
 		for(i = 0; i < 10; i++) {
 			float t = bmp180_temperature(bmp);
 			long p = bmp180_pressure(bmp);
