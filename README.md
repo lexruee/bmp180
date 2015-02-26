@@ -1,8 +1,11 @@
 # BMP180
-A driver written in C for the sensor BMP180.
+
+C driver and Python bindings for the sensor BMP180.
 
 
 ## Example Usage
+
+### C language
 
 ```c
 #include "bmp180.h"
@@ -30,6 +33,23 @@ int main(int argc, char **argv){
 	
 	return 0;
 }
+
+```
+
+### Python language
+
+```python
+import BMP180
+import time
+bmp = BMP180.BMP180(0x77,"/dev/i2c-1")
+
+
+for x in range(0,5):
+        print "temperature: %s" % bmp.temperature()
+        print "pressure: %s" % bmp.pressure()
+        print "altitude: %s" % bmp.altitude()
+        print
+        time.sleep(2)
 
 ```
 
