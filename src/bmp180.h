@@ -1,6 +1,6 @@
 /*
  * @author 	Alexander Rüedlinger <a.rueedlinger@gmail.com>
- * @date 	2015
+ * @date 	26.02.2015
  *
  * A c driver for the sensor BMP180.
  *  
