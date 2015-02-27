@@ -1,6 +1,6 @@
 # BMP180
 
-Linux C driver and Python bindings for the sensor BMP180.
+Raspberry Pi C driver and Python bindings for the sensor BMP180.
 
 
 ## Example Usage
