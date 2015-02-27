@@ -1,6 +1,6 @@
 # BMP180
 
-C driver and Python bindings for the sensor BMP180.
+Linux C driver and Python bindings for the sensor BMP180.
 
 
 ## Example Usage
@@ -57,3 +57,4 @@ for x in range(0,5):
 
 * i2c-tools 
 * libi2c-dev
+* python-dev
