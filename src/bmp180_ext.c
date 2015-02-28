@@ -19,15 +19,15 @@ typedef struct {
 
 static void BMP180_dealloc(BMP180_Object *self) {
 	bmp180_close(self->bmp180);
-    self->bmp180 = NULL;
-    self->ob_type->tp_free((PyObject*)self);
+	self->bmp180 = NULL;
+	self->ob_type->tp_free((PyObject*)self);
 }
 
 
 static PyObject *BMP180_new(PyTypeObject *type, PyObject *args, PyObject *kwds) {
 	BMP180_Object *self;
 	self = (BMP180_Object *) type->tp_alloc(type, 0);
-    return (PyObject *) self;
+	return (PyObject *) self;
 }
 
 
