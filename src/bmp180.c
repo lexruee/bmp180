@@ -2,7 +2,7 @@
  * @author 	Alexander Rüedlinger <a.rueedlinger@gmail.com>
  * @date 	26.02.2015
  *
- * A c driver for the sensor BMP180.
+ * A C driver for the sensor BMP180.
  *  
  */
  
@@ -22,7 +22,10 @@
 #include <math.h>
 #endif
 
-// AC register
+
+/* 
+ * AC register
+ */
 #define BMP180_REG_AC1_H 0xAA
 #define BMP180_REG_AC2_H 0xAC
 #define BMP180_REG_AC3_H 0xAE
@@ -30,65 +33,88 @@
 #define BMP180_REG_AC5_H 0xB2
 #define BMP180_REG_AC6_H 0xB4
 
-// B1 register
+/* 
+ * B1 register
+ */
 #define BMP180_REG_B1_H 0xB6
 
-// B2 register
+/* 
+ * B2 register
+ */
 #define BMP180_REG_B2_H 0xB8
 
-// MB register
+/* 
+ * MB register
+ */
 #define BMP180_REG_MB_H 0xBA
 
-// MC register
+/* 
+ * MC register
+ */
 #define BMP180_REG_MC_H 0xBC
 
-// MD register
+/* 
+ * MD register
+ */
 #define BMP180_REG_MD_H 0xBE
 
-
+/* 
+ * AC register
+ */
 #define BMP180_CTRL 0xF4
 
-
-
-// temperature register
+/* 
+ * Temperature register
+ */
 #define BMP180_REG_TMP 0xF6
 
-// pressure register
+/* 
+ * Pressure register
+ */
 #define BMP180_REG_PRE 0xF6
 
-
-// temperature read command
+/*
+ * Temperature read command
+ */
 #define BMP180_TMP_READ_CMD 0x2E
 
-// waiting time in us
+/*
+ *  Waiting time in us for reading temperature values
+ */
 #define BMP180_TMP_READ_WAIT_US 5000
 
-
-// pressure oversampling modes
+/*
+ * Pressure oversampling modes
+ */
 #define BMP180_PRE_OSS0 0 // ultra low power
 #define BMP180_PRE_OSS1 1 // standard
 #define BMP180_PRE_OSS2 2 // high resolution
 #define BMP180_PRE_OSS3 3 // ultra high resoultion
 
-// pressure read commands
+/*
+ * Pressure read commands
+ */
 #define BMP180_PRE_OSS0_CMD 0x34
 #define BMP180_PRE_OSS1_CMD 0x74
 #define BMP180_PRE_OSS2_CMD 0xB4
 #define BMP180_PRE_OSS3_CMD 0xF4
 
-// waiting times in us
+/* 
+ * Waiting times in us for reading pressure values
+ */
 #define BMP180_PRE_OSS0_WAIT_US 5000
 #define BMP180_PRE_OSS1_WAIT_US 8000
 #define BMP180_PRE_OSS2_WAIT_US 14000
 #define BMP180_PRE_OSS3_WAIT_US 26000
 
-
-#define BMP180_SEA_LEVEL 1013.25 // in hPa
+/*
+ * Average sea-level pressure in hPa
+ */
+#define BMP180_SEA_LEVEL 1013.25
 
 
 /*
  * Define debug function.
- *
  */
 
 //#define __BMP180_DEBUG__
@@ -100,24 +126,21 @@
 
 
 /*
- * Shortcut to cast void pointer to a bmp180_t pointer.
- *
+ * Shortcut to cast void pointer to a bmp180_t pointer
  */
- 
 #define TO_BMP(x)	(bmp180_t*) x
 
 
 
 /*
- * Basic structure for the bmp180 sensor.
- * 
- *
+ * Basic structure for the bmp180 sensor
  */
 typedef struct {
 	int file;
 	int address;
 	int oss;
 	char *i2c_device;
+	/* */
 	int32_t ac1;
 	int32_t ac2;
 	int32_t ac3;
@@ -132,14 +155,18 @@ typedef struct {
 } bmp180_t;
 
 
-// register address name lookup table
+/*
+ * Lookup table for BMP180 register address names
+ */
 char *bmp180_register_name[11] = {
 		"ac1", "ac2", "ac3", "ac4", "ac5", "ac6",
 		"b1", "b2", "mb", "mc", "md"
 };
 
 
-// register lookup table
+/*
+ * Lookup table for BMP180 register addresses
+ */
 int32_t bmp180_register_table[11][3] = {
 		{BMP180_REG_AC1_H, 1, 0},
 		{BMP180_REG_AC2_H, 1, 1},
@@ -155,7 +182,9 @@ int32_t bmp180_register_table[11][3] = {
 };
 
 
-// helper function prototypes
+/*
+ * Prototypes for helper functions
+ */
 int bmp180_set_addr(void *_bmp);
 int32_t bmp180_read(void *_bmp, uint8_t cmd, uint8_t reg, int16_t wait);
 void bmp180_read_eprom_reg(void *_bmp, int32_t *_data, uint8_t reg, int32_t sign);
@@ -163,7 +192,7 @@ void bmp180_read_eprom(void *_bmp);
 
 
 /*
- * Reads a single coeff. from the eprom of a BMP80 object.
+ * Reads a single calibration coefficient from the BNP180 eprom.
  *
  */
 void bmp180_read_eprom_reg(void *_bmp, int32_t *_data, uint8_t reg, int32_t sign) {
@@ -186,10 +215,8 @@ void bmp180_read_eprom(void *_bmp) {
 	bmp180_t *bmp = TO_BMP(_bmp);	
 	
 	int32_t *bmp180_register_addr[11] = {
-		&bmp->ac1, &bmp->ac2, &bmp->ac3, 
-		&bmp->ac4, &bmp->ac5, &bmp->ac6,
-		&bmp->b1, &bmp->b2, &bmp->mb, 
-		&bmp->mc, &bmp->md
+		&bmp->ac1, &bmp->ac2, &bmp->ac3, &bmp->ac4, &bmp->ac5, &bmp->ac6,
+		&bmp->b1, &bmp->b2, &bmp->mb, &bmp->mc, &bmp->md
 	};
 	
 	uint8_t sign, reg;
@@ -309,7 +336,7 @@ int32_t bmp180_read(void *_bmp, uint8_t cmd, uint8_t reg, int16_t wait) {
 
 
 /*
- * Returns the rwa measured temperature value of this sensor.
+ * Returns the raw measured temperature value of this sensor.
  * 
  */
 int32_t bmp180_read_raw_temperature(void *_bmp) {
