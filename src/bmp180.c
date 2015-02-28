@@ -164,15 +164,6 @@ typedef struct {
 
 
 /*
- * Lookup table for BMP180 register address names
- */
-char *bmp180_register_name[11] = {
-		"ac1", "ac2", "ac3", "ac4", "ac5", "ac6",
-		"b1", "b2", "mb", "mc", "md"
-};
-
-
-/*
  * Lookup table for BMP180 register addresses
  */
 int32_t bmp180_register_table[11][2] = {
@@ -224,15 +215,15 @@ int bmp180_set_addr(void *_bmp) {
  * 
  * @param bmp180 sensor
  */
-void bmp180_read_eprom_reg(void *_bmp, int32_t *_data, uint8_t reg, int32_t sign) {
+void bmp180_read_eprom_reg(void *_bmp, int32_t *_store, uint8_t reg, int32_t sign) {
 	bmp180_t *bmp = TO_BMP(_bmp);
 	int32_t data = i2c_smbus_read_word_data(bmp->file, reg) & 0xFFFF;
 	// i2c_smbus_read_word_data assumes little endian 
 	// on ARM (little endian) systems
-	*_data = ((data << 8) & 0xFF00) + (data >> 8);
+	*_store = ((data << 8) & 0xFF00) + (data >> 8);
 	
-	if(sign && (*_data > 32767))
-		*_data -= 65536; 	
+	if(sign && (*_store > 32767))
+		*_store -= 65536; 	
 }
 
 
@@ -329,20 +320,21 @@ int32_t bmp180_read_raw_pressure(void *_bmp, uint8_t oss) {
  * Dumps the eprom values of this BMP180 sensor.
  * 
  * @param bmp180 sensor
+ * @param bmp180 eprom struct
  */
-void bmp180_dump_eprom(void *_bmp) {
-	bmp180_read_eprom(_bmp);
+void bmp180_dump_eprom(void *_bmp, bmp180_eprom_t *eprom) {
 	bmp180_t *bmp = TO_BMP(_bmp);
-	
-	int32_t *bmp180_register_addr[11] = {
-		&bmp->ac1, &bmp->ac2, &bmp->ac3, &bmp->ac4, &bmp->ac5, &bmp->ac6,
-		&bmp->b1, &bmp->b2, &bmp->mb, &bmp->mc, &bmp->md
-	};
-	
-	int i;
-	for(i = 0; i < 11; i++) {
-		printf("reg=%s, value=%#x, %i\n", bmp180_register_name[i], *bmp180_register_addr[i], *bmp180_register_addr[i]);
-	}
+	eprom->ac1 = bmp->ac1;
+	eprom->ac2 = bmp->ac2;
+	eprom->ac3 = bmp->ac3;
+	eprom->ac4 = bmp->ac4;
+	eprom->ac5 = bmp->ac5;
+	eprom->ac6 = bmp->ac6;
+	eprom->b1 = bmp->b1;
+	eprom->b2 = bmp->b2;
+	eprom->mb = bmp->mb;
+	eprom->mc = bmp->mc;
+	eprom->md = bmp->md;
 }
 
 
