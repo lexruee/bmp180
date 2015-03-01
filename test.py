@@ -1,6 +1,6 @@
-import BMP180
+import tentacle_pi
 import time
-bmp = BMP180.BMP180(0x77,"/dev/i2c-1")
+bmp = tentacle_pi.BMP180(0x77,"/dev/i2c-1")
 
 
 for x in range(0,5):
