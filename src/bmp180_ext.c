@@ -97,7 +97,7 @@ static PyMemberDef BMP180_members[] = {
 static PyTypeObject BMP180_Type = {
 	PyObject_HEAD_INIT(NULL)
 	0,                         /*ob_size*/
-	"tentacle_pi.BMP180",             /*tp_name*/
+	"BMP180.BMP180",             /*tp_name*/
 	sizeof(BMP180_Object),             /*tp_basicsize*/
 	0,                         /*tp_itemsize*/
 	(destructor)BMP180_dealloc, /*tp_dealloc*/
