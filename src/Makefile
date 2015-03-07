@@ -1,6 +1,8 @@
+SENSOR=bmp180
+
 all:
-	gcc -Wall -c bmp180.c -o bmp180.o -lm
-	gcc -Wall bmp180.o test.c -o test.o -lm
+	gcc -Wall -c $(SENSOR).c -o $(SENSOR).o -lm
+	gcc -Wall $(SENSOR).o test.c -o test.o -lm
 
 clean:
 	rm *.o > /dev/null 2>&1 &
