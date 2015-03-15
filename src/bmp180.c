@@ -117,8 +117,8 @@
  * Define debug function.
  */
 
-//#define __BMP180_DEBUG__
-#ifdef __BMP180_DEBUG__				
+#define __BMP180_DEBUG__
+#ifdef __BMP180_DEBUG__
 #define DEBUG(...)	printf(__VA_ARGS__)
 #else
 #define DEBUG(...)
@@ -138,7 +138,7 @@
 typedef struct {
 	/* file descriptor */
 	int file;
-	
+
 	/* i2c device address */
 	int address;
 	
@@ -204,8 +204,9 @@ int bmp180_set_addr(void *_bmp) {
 	bmp180_t* bmp = TO_BMP(_bmp);
 	int error;
 
-	if((error = ioctl(bmp->file, I2C_SLAVE, bmp->address)) < 0)
+	if((error = ioctl(bmp->file, I2C_SLAVE, bmp->address)) < 0) {
 		DEBUG("error: ioctl() failed\n");
+	}
 
 	return error;
 }
@@ -233,8 +234,9 @@ void bmp180_read_eprom_reg(void *_bmp, int32_t *_store, uint8_t reg, int32_t sig
 	// on ARM (little endian) systems
 	*_store = ((data << 8) & 0xFF00) + (data >> 8);
 	
-	if(sign && (*_store > 32767))
-		*_store -= 65536; 	
+	if(sign && (*_store > 32767)) {
+		*_store -= 65536;
+	}
 }
 
 
@@ -307,7 +309,6 @@ int32_t bmp180_read_raw_pressure(void *_bmp, uint8_t oss) {
 		default:
 			wait = BMP180_PRE_OSS0_WAIT_US; cmd = BMP180_PRE_OSS0_CMD;
 			break;
-		
 	}
 	
 	i2c_smbus_write_byte_data(bmp->file, BMP180_CTRL, cmd);
@@ -383,13 +384,14 @@ void *bmp180_init(int address, const char* i2c_device_filepath) {
 	int file;
 	if((file = open(bmp->i2c_device, O_RDWR)) < 0) {
 		DEBUG("error: %s open() failed\n", bmp->i2c_device);
-		bmp180_init_error_cleanup(_bmp);
+		bmp180_init_error_cleanup(bmp);
 		return NULL;
 	}
 	bmp->file = file;
 
-	if(bmp180_set_addr(_bmp) < 0)
+	if(bmp180_set_addr(_bmp) < 0) {
 		return NULL;
+	}
 
 	// setup i2c device
 	bmp180_read_eprom(_bmp);
@@ -410,8 +412,9 @@ void bmp180_close(void *_bmp) {
 	DEBUG("close bmp180 device\n");
 	bmp180_t *bmp = TO_BMP(_bmp);
 	
-	if(close(bmp->file) < 0)
+	if(close(bmp->file) < 0) {
 		DEBUG("error: %s close() failed\n", bmp->i2c_device);
+	}
 	
 	free(bmp->i2c_device); // free string
 	bmp->i2c_device = NULL;
@@ -477,10 +480,11 @@ long bmp180_pressure(void *_bmp) {
 	B4 = bmp->ac4 * (unsigned long)(X3 + 32768) >> 15;
 	B7 = ((unsigned long) UP - B3) * (50000 >> bmp->oss);
 	
-	if(B7 < 0x80000000)
+	if(B7 < 0x80000000) {
 		p = (B7 * 2) / B4;
-	else
+	} else {
 		p = (B7 / B4) * 2;
+	}
 	
 	X1 = (p >> 8) * (p >> 8);
 	X1 = (X1 * 3038) >> 16;
