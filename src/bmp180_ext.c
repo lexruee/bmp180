@@ -39,9 +39,13 @@ static int BMP180_init(BMP180_Object *self, PyObject *args, PyObject *kwds) {
 	if(!PyArg_ParseTupleAndKeywords(args, kwds, "is", kwlist, &address, &i2c_device))
 		return -1;
 		
-	if(i2c_device) 
+	if(i2c_device) {
 		self->bmp180 = bmp180_init(address, i2c_device);
-
+		if(self->bmp180 == NULL)
+			return NULL;
+	} else {
+		return NULL;
+	}
 	return 0;
 }
 

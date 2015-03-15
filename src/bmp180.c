@@ -189,6 +189,7 @@ void bmp180_read_eprom_reg(void *_bmp, int32_t *_data, uint8_t reg, int32_t sign
 void bmp180_read_eprom(void *_bmp);
 int32_t bmp180_read_raw_pressure(void *_bmp, uint8_t oss);
 int32_t bmp180_read_raw_temperature(void *_bmp);
+void bmp180_init_error_cleanup(void *_bmp);
 
 
 /*
@@ -207,6 +208,16 @@ int bmp180_set_addr(void *_bmp) {
 		DEBUG("error: ioctl() failed\n");
 
 	return error;
+}
+
+
+
+void bmp180_init_error_cleanup(void *_bmp) {
+	bmp180_t* bmp = TO_BMP(_bmp);
+	free(bmp->i2c_device);
+	bmp->i2c_device = NULL;
+	free(bmp);
+	bmp = NULL;
 }
 
 
@@ -372,6 +383,7 @@ void *bmp180_init(int address, const char* i2c_device_filepath) {
 	int file;
 	if((file = open(bmp->i2c_device, O_RDWR)) < 0) {
 		DEBUG("error: %s open() failed\n", bmp->i2c_device);
+		bmp180_init_error_cleanup(_bmp);
 		return NULL;
 	}
 	bmp->file = file;
