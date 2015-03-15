@@ -18,8 +18,9 @@ typedef struct {
 
 
 static void BMP180_dealloc(BMP180_Object *self) {
-	bmp180_close(self->bmp180);
-	self->bmp180 = NULL;
+	if(self->bmp180 != NULL) {
+		bmp180_close(self->bmp180);
+	}
 	self->ob_type->tp_free((PyObject*)self);
 }
 
@@ -41,10 +42,10 @@ static int BMP180_init(BMP180_Object *self, PyObject *args, PyObject *kwds) {
 		
 	if(i2c_device) {
 		self->bmp180 = bmp180_init(address, i2c_device);
-		if(self->bmp180 == NULL)
+		if(self->bmp180 == NULL) {
+			PyErr_SetString(PyExc_RuntimeError, "Cannot initialize sensor. Run program as root and check i2c device / address.");
 			return -1;
-	} else {
-		return -1;
+		}
 	}
 	return 0;
 }
