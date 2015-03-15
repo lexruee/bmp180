@@ -117,7 +117,7 @@
  * Define debug function.
  */
 
-#define __BMP180_DEBUG__
+//#define __BMP180_DEBUG__
 #ifdef __BMP180_DEBUG__
 #define DEBUG(...)	printf(__VA_ARGS__)
 #else
@@ -199,6 +199,8 @@ void bmp180_init_error_cleanup(void *_bmp);
 
 /*
  * Sets the address for the i2c device file.
+ * 
+ * @param bmp180 sensor
  */
 int bmp180_set_addr(void *_bmp) {
 	bmp180_t* bmp = TO_BMP(_bmp);
@@ -213,13 +215,23 @@ int bmp180_set_addr(void *_bmp) {
 
 
 
+/*
+ * Frees allocated memory in the init function.
+ * 
+ * @param bmp180 sensor
+ */
 void bmp180_init_error_cleanup(void *_bmp) {
 	bmp180_t* bmp = TO_BMP(_bmp);
-	free(bmp->i2c_device);
-	bmp->i2c_device = NULL;
+	
+	if(bmp->i2c_device != NULL) {
+		free(bmp->i2c_device);
+		bmp->i2c_device = NULL;
+	}
+	
 	free(bmp);
 	bmp = NULL;
 }
+
 
 
 /*
@@ -374,6 +386,7 @@ void *bmp180_init(int address, const char* i2c_device_filepath) {
 	bmp->i2c_device = (char*) malloc(strlen(i2c_device_filepath) * sizeof(char));
 	if(bmp->i2c_device == NULL) {
 		DEBUG("error: malloc returns NULL pointer!\n");
+		bmp180_init_error_cleanup(bmp);
 		return NULL;
 	}
 
@@ -389,7 +402,9 @@ void *bmp180_init(int address, const char* i2c_device_filepath) {
 	}
 	bmp->file = file;
 
+	// set i2c device address
 	if(bmp180_set_addr(_bmp) < 0) {
+		bmp180_init_error_cleanup(bmp);
 		return NULL;
 	}
 
@@ -409,6 +424,10 @@ void *bmp180_init(int address, const char* i2c_device_filepath) {
  * @param bmp180 sensor
  */
 void bmp180_close(void *_bmp) {
+	if(_bmp == NULL) {
+		return;
+	}
+	
 	DEBUG("close bmp180 device\n");
 	bmp180_t *bmp = TO_BMP(_bmp);
 	

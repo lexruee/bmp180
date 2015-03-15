@@ -18,9 +18,7 @@ typedef struct {
 
 
 static void BMP180_dealloc(BMP180_Object *self) {
-	if(self->bmp180 != NULL) {
-		bmp180_close(self->bmp180);
-	}
+	bmp180_close(self->bmp180);
 	self->ob_type->tp_free((PyObject*)self);
 }
 
