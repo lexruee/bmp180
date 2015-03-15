@@ -42,9 +42,9 @@ static int BMP180_init(BMP180_Object *self, PyObject *args, PyObject *kwds) {
 	if(i2c_device) {
 		self->bmp180 = bmp180_init(address, i2c_device);
 		if(self->bmp180 == NULL)
-			return NULL;
+			return -1;
 	} else {
-		return NULL;
+		return -1;
 	}
 	return 0;
 }
