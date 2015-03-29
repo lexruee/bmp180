@@ -246,9 +246,9 @@ void bmp180_read_eprom_reg(void *_bmp, int32_t *_store, uint8_t reg, int32_t sig
 	// i2c_smbus_read_word_data assumes little endian 
 	// but ARM uses big endian. Thus the ordering of the bytes is reversed.
 	// data = 	 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15   bit position
-	//			|      lsb      |          msb        |  
+	//          |      lsb      |          msb        |  
 	
-	// 		           msb           +     lsb
+	//                 msb           +     lsb
 	*_store = ((data << 8) & 0xFF00) + (data >> 8);
 	
 	if(sign && (*_store > 32767)) {
