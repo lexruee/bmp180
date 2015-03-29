@@ -295,6 +295,7 @@ int32_t bmp180_read_raw_temperature(void *_bmp) {
 	int32_t data = i2c_smbus_read_word_data(bmp->file, BMP180_REG_TMP) & 0xFFFF;
 	
 	data = ((data << 8) & 0xFF00) + (data >> 8);
+	
 	return data;
 }
 
@@ -338,6 +339,7 @@ int32_t bmp180_read_raw_pressure(void *_bmp, uint8_t oss) {
 	xlsb = i2c_smbus_read_byte_data(bmp->file, BMP180_REG_PRE+2) & 0xFF;
 	
 	data = ((msb << 16)  + (lsb << 8)  + xlsb) >> (8 - bmp->oss);
+	
 	return data;
 }
 
@@ -466,6 +468,7 @@ float bmp180_temperature(void *_bmp) {
 	X2 = (bmp->mc << 11) / (X1 + bmp->md);
 	B5 = X1 + X2;
 	T = ((B5 + 8) >> 4) / 10.0;
+	
 	return T;
 }
 
@@ -530,6 +533,7 @@ float bmp180_altitude(void *_bmp) {
 	float p, alt;
 	p = bmp180_pressure(_bmp);
 	alt = 44330 * (1 - pow(( (p/100) / BMP180_SEA_LEVEL),1/5.255));
+	
 	return alt;
 }
 
