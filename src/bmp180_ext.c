@@ -84,9 +84,9 @@ static PyObject *BMP180_set_oss(BMP180_Object *self, PyObject *args) {
 
 
 static PyMethodDef BMP180_methods[] = {
-	{"temperature", (PyCFunction) BMP180_temperature, METH_NOARGS, "Return the temperature value"},
-	{"altitude", (PyCFunction) BMP180_altitude, METH_NOARGS, "Return the altitude value"},
-	{"pressure", (PyCFunction) BMP180_pressure, METH_NOARGS, "Return the pressure value"},
+	{"temperature", (PyCFunction) BMP180_temperature, METH_NOARGS, "Returns a temperature value"},
+	{"altitude", (PyCFunction) BMP180_altitude, METH_NOARGS, "Returns a altitude value"},
+	{"pressure", (PyCFunction) BMP180_pressure, METH_NOARGS, "Returns a pressure value"},
 	{"set_oss", (PyCFunction) BMP180_set_oss, METH_VARARGS, "Set oss"},
 	{NULL}  /* Sentinel */
 };
