@@ -1,11 +1,11 @@
 /*
  * @author 	Alexander Rüedlinger <a.rueedlinger@gmail.com>
  * @date 	26.02.2015
- * 
+ *
  * Python bindings for the BMP180 driver written in C.
- * 
+ *
  */
- 
+
 #include <Python.h>
 #include <structmember.h>
 #include "bmp180.h"
@@ -34,10 +34,10 @@ static int BMP180_init(BMP180_Object *self, PyObject *args, PyObject *kwds) {
 	int address;
 	const char *i2c_device;
 	static char *kwlist[] = {"address", "i2c_devcie", NULL};
-	
+
 	if(!PyArg_ParseTupleAndKeywords(args, kwds, "is", kwlist, &address, &i2c_device))
 		return -1;
-		
+
 	if(i2c_device) {
 		self->bmp180 = bmp180_init(address, i2c_device);
 		if(self->bmp180 == NULL) {
@@ -77,7 +77,7 @@ static PyObject *BMP180_set_oss(BMP180_Object *self, PyObject *args) {
 	int oss;
 	if(!PyArg_ParseTuple(args, "i", &oss))
 		return NULL;
-		
+
 	bmp180_set_oss(self->bmp180, oss);
 	return Py_None;
 }
@@ -100,7 +100,7 @@ static PyMemberDef BMP180_members[] = {
 static PyTypeObject BMP180_Type = {
 	PyObject_HEAD_INIT(NULL)
 	0,                         /*ob_size*/
-	"BMP180.BMP180",             /*tp_name*/
+	"tentacle_pi.BMP180",             /*tp_name*/
 	sizeof(BMP180_Object),             /*tp_basicsize*/
 	0,                         /*tp_itemsize*/
 	(destructor)BMP180_dealloc, /*tp_dealloc*/
@@ -147,15 +147,15 @@ static PyMethodDef module_methods[] = {
 
 PyMODINIT_FUNC initBMP180(void) {
 	PyObject *m;
-	
+
 	if(PyType_Ready(&BMP180_Type) < 0)
 		return;
-		
+
 	m = Py_InitModule3("BMP180", module_methods, "BMP180 extension module");
-	
+
 	if(m == NULL)
 		return;
-		
+
 	Py_INCREF(&BMP180_Type);
 	PyModule_AddObject(m, "BMP180", (PyObject *)&BMP180_Type);
 }
