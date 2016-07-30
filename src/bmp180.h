@@ -42,5 +42,7 @@ float bmp180_temperature(void *_bmp);
 
 float bmp180_altitude(void *_bmp);
 
+int bmp180_get_last_errno(void *_bmp);
+
 void bmp180_dump_eprom(void *_bmp, bmp180_eprom_t *eprom);
 
